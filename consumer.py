@@ -1,18 +1,16 @@
-#!/usr/bin/env python
-import time
-import schedule
-import random
-import uuid
 from kafka import KafkaConsumer
-from json import dumps, loads
-import os
+import sys
 
-print("create consumer")
-cons = KafkaConsumer('input-topic', bootstrap_servers=['localhost:9092'], value_deserializer = lambda x:loads(x).decode('utf-8'))
-print(cons.subscription())
-print("created consumer")
-for m in cons:
-    print(m.value)
-    
+bootstrap_servers = ['localhost:9092']
+topicName = 'input-topic'
 
-print("end")
+# Initialize consumer variable
+consumer = KafkaConsumer (topicName, group_id ='consumer-group-01',bootstrap_servers=bootstrap_servers)
+
+# Read and print message from consumer
+for msg in consumer:
+   print("consumed: ", msg.topic, msg.partition, msg.offset,
+                  msg.key, msg.value, msg.timestamp)
+
+# Terminate the script
+sys.exit()
